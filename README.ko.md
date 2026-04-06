@@ -82,6 +82,49 @@ Musk      ❯ 먼저 진짜 병목이 뭔지 보세요.
 - 카테고리 페이지 6개
 - 확장을 위한 템플릿 세트
 
+<a id="install"></a>
+## 설치
+
+### 하나의 페르소나를 OpenClaw의 SOUL로 바꾸기
+
+OpenClaw는 일반 세션에서 워크스페이스 루트의 `SOUL.md`를 읽습니다. claw를 특정 페르소나의 디지털 분신처럼 만들고 싶다면, 그 페르소나의 `SKILL.md`를 원본으로 삼아 더 짧고 행동 중심적인 `SOUL.md`로 증류하는 것이 가장 간단합니다.
+
+1. `soulbanner_skills/hanli/` 또는 `sovereign_skills/musk/` 같은 페르소나 디렉터리를 고릅니다
+2. `SKILL.md`에서 말투, 기본 판단 프레임, 직설성, 경계, 말의 리듬을 추려냅니다
+3. 그 특성들을 OpenClaw 워크스페이스 루트의 `SOUL.md`에 다시 써 넣습니다
+4. 새 세션을 열거나 OpenClaw를 새로고침해서 claw가 새 SOUL을 읽게 합니다
+
+```bash
+# 선택 사항: 기존 SOUL.md가 있다면 먼저 백업
+cp ~/.openclaw/workspace/SOUL.md ~/.openclaw/workspace/SOUL.md.bak
+# 그다음 soulbanner_skills/hanli/SKILL.md를 참고해서
+# ~/.openclaw/workspace/SOUL.md에 페르소나 특성을 다시 작성합니다
+```
+
+`SOUL.md`에는 상호작용 감각을 실제로 바꾸는 요소만 남기는 것이 좋습니다. 예를 들면 말투, 관점, 간결함, 경계, 기본 직설성입니다. `references/research/` 전체나 긴 인용문 묶음을 그대로 넣지는 마세요.
+
+### 한 페르소나 또는 전체 페르소나 skill을 OpenClaw에 설치하기
+
+OpenClaw는 `<workspace>/skills`, `~/.openclaw/skills` 같은 디렉터리에서 skills를 읽습니다. 여기서는 기본 워크스페이스인 `~/.openclaw/workspace/skills/`를 예로 듭니다.
+
+```bash
+mkdir -p ~/.openclaw/workspace/skills
+
+# 단일 페르소나
+cp -R soulbanner_skills/hanli ~/.openclaw/workspace/skills/hanli
+# 또는
+cp -R sovereign_skills/musk ~/.openclaw/workspace/skills/musk
+
+# 전체 페르소나
+cp -R soulbanner_skills/* ~/.openclaw/workspace/skills/
+cp -R sovereign_skills/* ~/.openclaw/workspace/skills/
+
+# 선택 사항: 라우터도 함께 설치
+cp -R skills/all-personas ~/.openclaw/workspace/skills/all-personas
+```
+
+이 skills를 모든 워크스페이스에서 공통으로 쓰고 싶다면 대상 경로를 `~/.openclaw/skills/`로 바꾸면 됩니다. 복사 후에는 새 세션을 열고 `openclaw skills list` 또는 `openclaw skills check`로 인식 여부를 확인하세요.
+
 ```bash
 git clone https://github.com/pzy2000/Ten-thousand-soul-banners.git
 cd Ten-thousand-soul-banners

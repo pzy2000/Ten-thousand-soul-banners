@@ -79,6 +79,46 @@ all-personas ❯ 如果你要的是“别冲动，先看退路”的视角，
 
 ## 安装
 
+### 把某个角色更新成 OpenClaw 的 SOUL
+
+OpenClaw 会在普通会话中读取工作区根目录的 `SOUL.md`。如果你想让 claw（龙虾）成为某个角色的数字分身，最简单的做法是把该角色的 `SKILL.md` 当作素材，提炼成一份更短、更像人格底色的 `SOUL.md`：
+
+1. 选一个角色目录，例如 `soulbanner_skills/hanli/` 或 `sovereign_skills/musk/`
+2. 从 `SKILL.md` 里提炼语气、默认判断框架、直接程度、边界和说话节奏
+3. 把这些内容改写进 OpenClaw 工作区根目录的 `SOUL.md`
+4. 新开一个 session，或刷新 OpenClaw，让 claw 读取新的 SOUL
+
+```bash
+# 可选：如果已有 SOUL.md，先备份
+cp ~/.openclaw/workspace/SOUL.md ~/.openclaw/workspace/SOUL.md.bak
+# 然后参考 soulbanner_skills/hanli/SKILL.md
+# 手动把角色特征改写进 ~/.openclaw/workspace/SOUL.md
+```
+
+`SOUL.md` 建议只保留真正会改变交互体验的内容：语气、观点、简洁程度、边界、默认直接程度。不要把整份 `references/research/` 或大段语录原样塞进去。
+
+### 把某个角色 / 全部角色的 skill 安装到 OpenClaw
+
+OpenClaw 会从 `<workspace>/skills`、`~/.openclaw/skills` 等目录加载 skills。下面以默认工作区 `~/.openclaw/workspace/skills/` 为例：
+
+```bash
+mkdir -p ~/.openclaw/workspace/skills
+
+# 安装单个角色
+cp -R soulbanner_skills/hanli ~/.openclaw/workspace/skills/hanli
+# 或
+cp -R sovereign_skills/musk ~/.openclaw/workspace/skills/musk
+
+# 安装全部角色
+cp -R soulbanner_skills/* ~/.openclaw/workspace/skills/
+cp -R sovereign_skills/* ~/.openclaw/workspace/skills/
+
+# 可选：连总入口一起装上
+cp -R skills/all-personas ~/.openclaw/workspace/skills/all-personas
+```
+
+如果你想让这些 skill 对所有工作区都可见，把目标目录改成 `~/.openclaw/skills/` 也可以。复制完成后，建议新开一个 session，再用 `openclaw skills list` 或 `openclaw skills check` 确认 OpenClaw 已经识别到它们。
+
 ### 安装整个仓库
 
 ```bash

@@ -81,6 +81,49 @@ Current scope:
 - 6 category pages
 - reusable templates for future contributions
 
+<a id="install"></a>
+## Install
+
+### Turn one persona into OpenClaw's SOUL
+
+OpenClaw reads `SOUL.md` from the workspace root during normal sessions. If you want claw to become a persona's digital twin, the simplest path is to use that persona's `SKILL.md` as source material and distill it into a shorter, more behavioral `SOUL.md`:
+
+1. Pick a persona directory such as `soulbanner_skills/hanli/` or `sovereign_skills/musk/`
+2. Pull the tone, default judgment style, directness, boundaries, and speaking rhythm out of `SKILL.md`
+3. Rewrite those traits into the `SOUL.md` at your OpenClaw workspace root
+4. Start a new session, or refresh OpenClaw so claw picks up the new soul
+
+```bash
+# Optional: back up an existing SOUL.md first
+cp ~/.openclaw/workspace/SOUL.md ~/.openclaw/workspace/SOUL.md.bak
+# then use soulbanner_skills/hanli/SKILL.md as source
+# and rewrite the persona traits into ~/.openclaw/workspace/SOUL.md
+```
+
+Keep `SOUL.md` short and behavioral: tone, opinions, concision, boundaries, default directness. Do not paste the entire `references/research/` tree or a wall of quotes into it.
+
+### Install one persona or all personas in OpenClaw
+
+OpenClaw loads skills from directories such as `<workspace>/skills` and `~/.openclaw/skills`. Using the default workspace `~/.openclaw/workspace/skills/` as an example:
+
+```bash
+mkdir -p ~/.openclaw/workspace/skills
+
+# One persona
+cp -R soulbanner_skills/hanli ~/.openclaw/workspace/skills/hanli
+# or
+cp -R sovereign_skills/musk ~/.openclaw/workspace/skills/musk
+
+# All personas
+cp -R soulbanner_skills/* ~/.openclaw/workspace/skills/
+cp -R sovereign_skills/* ~/.openclaw/workspace/skills/
+
+# Optional: install the router too
+cp -R skills/all-personas ~/.openclaw/workspace/skills/all-personas
+```
+
+If you want these skills available across workspaces, copy them into `~/.openclaw/skills/` instead. After copying, start a new session and verify with `openclaw skills list` or `openclaw skills check`.
+
 ```bash
 git clone https://github.com/pzy2000/Ten-thousand-soul-banners.git
 cd Ten-thousand-soul-banners

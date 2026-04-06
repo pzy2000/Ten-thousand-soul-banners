@@ -82,6 +82,49 @@ Musk       ❯ まず本当のボトルネックを見てください。
 - 6 つのカテゴリページ
 - 今後の追加に使えるテンプレート
 
+<a id="install"></a>
+## 導入
+
+### 1人のペルソナを OpenClaw の SOUL にする
+
+OpenClaw は通常セッションで、ワークスペースのルートにある `SOUL.md` を読み込みます。claw を特定ペルソナのデジタル分身のようにしたいなら、その人物の `SKILL.md` を素材にして、より短く振る舞い中心の `SOUL.md` に蒸留するのがいちばん簡単です。
+
+1. `soulbanner_skills/hanli/` や `sovereign_skills/musk/` のようなペルソナディレクトリを選ぶ
+2. `SKILL.md` から、口調、標準の判断フレーム、直接さ、境界線、話すリズムを抜き出す
+3. それらを OpenClaw ワークスペースのルートにある `SOUL.md` に書き直す
+4. 新しいセッションを開くか OpenClaw をリフレッシュして、新しい SOUL を claw に読み込ませる
+
+```bash
+# 任意: 既存の SOUL.md があるなら先にバックアップ
+cp ~/.openclaw/workspace/SOUL.md ~/.openclaw/workspace/SOUL.md.bak
+# その後 soulbanner_skills/hanli/SKILL.md を参照し、
+# ~/.openclaw/workspace/SOUL.md にペルソナ特性を書き直す
+```
+
+`SOUL.md` には、会話体験を本当に変える要素だけを残すのがおすすめです。たとえば口調、意見、簡潔さ、境界線、標準の直接さなどです。`references/research/` 全体や長い引用集をそのまま貼り付けないでください。
+
+### 1人分 / 全員分の skill を OpenClaw に入れる
+
+OpenClaw は `<workspace>/skills` や `~/.openclaw/skills` などのディレクトリから skill を読み込みます。ここでは既定のワークスペース `~/.openclaw/workspace/skills/` を例にします。
+
+```bash
+mkdir -p ~/.openclaw/workspace/skills
+
+# 1人分
+cp -R soulbanner_skills/hanli ~/.openclaw/workspace/skills/hanli
+# または
+cp -R sovereign_skills/musk ~/.openclaw/workspace/skills/musk
+
+# 全員分
+cp -R soulbanner_skills/* ~/.openclaw/workspace/skills/
+cp -R sovereign_skills/* ~/.openclaw/workspace/skills/
+
+# 任意: ルーターも一緒に入れる
+cp -R skills/all-personas ~/.openclaw/workspace/skills/all-personas
+```
+
+これらの skill を全ワークスペースで共通利用したいなら、コピー先を `~/.openclaw/skills/` に変えてください。コピー後は新しいセッションを開き、`openclaw skills list` または `openclaw skills check` で認識を確認できます。
+
 ```bash
 git clone https://github.com/pzy2000/Ten-thousand-soul-banners.git
 cd Ten-thousand-soul-banners

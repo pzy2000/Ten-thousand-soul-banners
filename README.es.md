@@ -81,6 +81,49 @@ Alcance actual:
 - 6 páginas de categorías
 - plantillas reutilizables para futuras contribuciones
 
+<a id="install"></a>
+## Instalación
+
+### Convertir una persona en el SOUL de OpenClaw
+
+OpenClaw lee `SOUL.md` desde la raíz del workspace durante las sesiones normales. Si quieres que claw se convierta en el gemelo digital de una persona, lo más simple es usar el `SKILL.md` de esa persona como material base y destilarlo en un `SOUL.md` más corto y conductual:
+
+1. Elige un directorio de persona, como `soulbanner_skills/hanli/` o `sovereign_skills/musk/`
+2. Extrae de `SKILL.md` el tono, el marco de juicio por defecto, el grado de franqueza, los límites y el ritmo verbal
+3. Reescribe esos rasgos en el `SOUL.md` de la raíz de tu workspace de OpenClaw
+4. Abre una nueva sesión, o refresca OpenClaw para que claw cargue el nuevo soul
+
+```bash
+# Opcional: si ya tienes SOUL.md, haz una copia primero
+cp ~/.openclaw/workspace/SOUL.md ~/.openclaw/workspace/SOUL.md.bak
+# luego usa soulbanner_skills/hanli/SKILL.md como base
+# y reescribe esos rasgos en ~/.openclaw/workspace/SOUL.md
+```
+
+Conviene que `SOUL.md` sea breve y conductual: tono, opiniones, nivel de concisión, límites y franqueza por defecto. No pegues ahí todo `references/research/` ni una pared de citas.
+
+### Instalar una persona o todas las personas en OpenClaw
+
+OpenClaw carga skills desde directorios como `<workspace>/skills` y `~/.openclaw/skills`. Tomando como ejemplo el workspace por defecto `~/.openclaw/workspace/skills/`:
+
+```bash
+mkdir -p ~/.openclaw/workspace/skills
+
+# Una sola persona
+cp -R soulbanner_skills/hanli ~/.openclaw/workspace/skills/hanli
+# o
+cp -R sovereign_skills/musk ~/.openclaw/workspace/skills/musk
+
+# Todas las personas
+cp -R soulbanner_skills/* ~/.openclaw/workspace/skills/
+cp -R sovereign_skills/* ~/.openclaw/workspace/skills/
+
+# Opcional: instalar también el skill enrutador
+cp -R skills/all-personas ~/.openclaw/workspace/skills/all-personas
+```
+
+Si quieres que estos skills estén disponibles en todos tus workspaces, cambia el destino a `~/.openclaw/skills/`. Después de copiarlos, abre una sesión nueva y verifica con `openclaw skills list` o `openclaw skills check`.
+
 ```bash
 git clone https://github.com/pzy2000/Ten-thousand-soul-banners.git
 cd Ten-thousand-soul-banners
