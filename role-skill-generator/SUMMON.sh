@@ -33,11 +33,10 @@ case "$RESEARCH_BIAS" in
     ;;
 esac
 
-# Optional env (inherited by python3): ROLE_SKILL_FETCH_INSECURE_SSL=1 relaxes TLS verification for
-# document fetches only (e.g. legacy chains / Missing Subject Key Identifier). Does not affect the LLM API.
-# Convenience: SUMMON_FETCH_INSECURE_SSL=1 sets the same flag.
-if [[ "${SUMMON_FETCH_INSECURE_SSL:-}" == "1" ]]; then
-  export ROLE_SKILL_FETCH_INSECURE_SSL=1
+# Document fetches default to skipping TLS cert verification (see providers.py).
+# To enforce verification: ROLE_SKILL_FETCH_INSECURE_SSL=0 or SUMMON_FETCH_VERIFY_SSL=1
+if [[ "${SUMMON_FETCH_VERIFY_SSL:-}" == "1" ]]; then
+  export ROLE_SKILL_FETCH_INSECURE_SSL=0
 fi
 
 PROVIDER="${ROLE_SKILL_PROVIDER:-duckduckgo-html}"

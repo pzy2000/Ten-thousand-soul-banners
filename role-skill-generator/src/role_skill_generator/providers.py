@@ -36,11 +36,16 @@ _RESEARCH_WAIT_HEARTBEAT_SEC = 5.0
 
 
 def _urlopen_ssl_context() -> ssl.SSLContext | None:
-    """Optional TLS relax for sources with legacy chains (e.g. missing SKI). Set ROLE_SKILL_FETCH_INSECURE_SSL=1."""
-    raw = os.getenv("ROLE_SKILL_FETCH_INSECURE_SSL", "").strip().lower()
-    if raw in ("1", "true", "yes", "on"):
-        return ssl._create_unverified_context()
-    return None
+    """TLS context for document fetches only.
+
+    By default verification is **off** (many sources use legacy / non-compliant chains).
+    Set ``ROLE_SKILL_FETCH_INSECURE_SSL=0`` (or ``false`` / ``no`` / ``off``) to use the
+    platform default verified context.
+    """
+    raw = os.getenv("ROLE_SKILL_FETCH_INSECURE_SSL", "1").strip().lower()
+    if raw in ("0", "false", "no", "off"):
+        return None
+    return ssl._create_unverified_context()
 
 
 def _llm_chat_timeout_seconds() -> float:
