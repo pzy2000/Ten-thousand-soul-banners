@@ -1,4 +1,4 @@
 plan.md
 marketing/xiaohongshu-promo.md
-role-skill-generator/runs/ada-lovelace
-
+role-skill-generator/runs
+*.pyc

@@ -8,6 +8,7 @@ from role_skill_generator.pipeline import (
     generate_persona_materials,
     plan_queries,
     render_bundle,
+    summon_persona_materials,
     synthesize_bundle,
 )
 
@@ -55,6 +56,40 @@ def build_parser() -> argparse.ArgumentParser:
     generate_cmd.add_argument("--max-documents", type=int, default=12)
     generate_cmd.add_argument("--model", help="OpenAI-compatible model name")
     generate_cmd.add_argument(
+        "-q",
+        "--quiet",
+        action="store_true",
+        help="不打印每条检索与抓取的详细日志（默认会打印）。",
+    )
+
+    summon_cmd = subparsers.add_parser(
+        "summon",
+        help="用角色名称、简述和 bias 一键生成 target profile 并跑完整流水线。",
+    )
+    summon_cmd.add_argument("display_name", help="角色名称")
+    summon_cmd.add_argument("description", help="一句或几句角色描述")
+    summon_cmd.add_argument(
+        "research_bias",
+        choices=["humor", "serious", "comprehensive"],
+        help="资料收集偏向：humor | serious | comprehensive",
+    )
+    summon_cmd.add_argument("--provider", default="duckduckgo-html", help="duckduckgo-html | tavily | serper")
+    summon_cmd.add_argument("--max-results", type=int, default=5)
+    summon_cmd.add_argument("--max-documents", type=int, default=12)
+    summon_cmd.add_argument("--model", help="OpenAI-compatible model name")
+    summon_cmd.add_argument(
+        "--workspace-root",
+        type=Path,
+        default=Path(__file__).resolve().parents[3],
+        help="仓库根目录；默认自动定位到当前 monorepo 根目录。",
+    )
+    summon_cmd.add_argument(
+        "--runs-root",
+        type=Path,
+        default=Path(__file__).resolve().parents[2] / "runs",
+        help="运行目录根；默认写到 role-skill-generator/runs。",
+    )
+    summon_cmd.add_argument(
         "-q",
         "--quiet",
         action="store_true",
@@ -115,6 +150,22 @@ def main() -> None:
             verbose_collect=not args.quiet,
         )
         print(f"generated {persona_dir}")
+        return
+
+    if args.command == "summon":
+        persona_dir = summon_persona_materials(
+            args.display_name,
+            args.description,
+            args.research_bias,
+            workspace_root=args.workspace_root,
+            runs_root=args.runs_root,
+            provider_name=args.provider,
+            max_results=args.max_results,
+            max_documents=args.max_documents,
+            model=args.model,
+            verbose_collect=not args.quiet,
+        )
+        print(f"summoned {persona_dir}")
         return
 
     parser.error(f"unknown command: {args.command}")

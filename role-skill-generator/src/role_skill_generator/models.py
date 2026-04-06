@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import re
 from copy import deepcopy
 from datetime import date
@@ -16,6 +17,7 @@ DEFAULT_RESEARCH_FOCUS = [
     "时间线与人设变化",
 ]
 ALLOWED_TARGET_ROOTS = {"soulbanner_skills", "sovereign_skills"}
+ALLOWED_RESEARCH_BIASES = {"humor", "serious", "comprehensive"}
 
 
 class ValidationError(ValueError):
@@ -29,7 +31,8 @@ def today_string() -> str:
 def slugify(value: str) -> str:
     slug = re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
     if not slug:
-        raise ValidationError("slug 不能为空，也不能在清洗后变成空字符串。")
+        digest = hashlib.sha1(value.encode("utf-8")).hexdigest()[:8]
+        slug = f"persona-{digest}"
     return slug
 
 
@@ -160,6 +163,12 @@ def normalize_target_profile(data: dict[str, Any]) -> dict[str, Any]:
             "`target_root` 只能是 `soulbanner_skills` 或 `sovereign_skills`。"
         )
 
+    research_bias = _optional_str(profile, "research_bias", "comprehensive")
+    if research_bias not in ALLOWED_RESEARCH_BIASES:
+        raise ValidationError(
+            "`research_bias` 只能是 `humor`、`serious` 或 `comprehensive`。"
+        )
+
     result = {
         "slug": slug,
         "display_name": _required_str(profile, "display_name"),
@@ -167,6 +176,7 @@ def normalize_target_profile(data: dict[str, Any]) -> dict[str, Any]:
         "description": _optional_str(profile, "description"),
         "category_tags": _str_list(profile.get("category_tags"), key="category_tags", min_items=1),
         "target_root": target_root,
+        "research_bias": research_bias,
         "triggers": _str_list(profile.get("triggers"), key="triggers", default=[]),
         "source_scope": _str_list(
             profile.get("source_scope"),

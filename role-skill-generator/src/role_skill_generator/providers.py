@@ -4,6 +4,7 @@ import html
 import json
 import os
 import re
+import ssl
 import threading
 import time
 from dataclasses import dataclass
@@ -32,6 +33,14 @@ class HTTPError(RuntimeError):
 _DEFAULT_HTTP_TIMEOUT = 30.0
 _LLM_CHAT_TIMEOUT_DEFAULT = 600.0
 _RESEARCH_WAIT_HEARTBEAT_SEC = 5.0
+
+
+def _urlopen_ssl_context() -> ssl.SSLContext | None:
+    """Optional TLS relax for sources with legacy chains (e.g. missing SKI). Set ROLE_SKILL_FETCH_INSECURE_SSL=1."""
+    raw = os.getenv("ROLE_SKILL_FETCH_INSECURE_SSL", "").strip().lower()
+    if raw in ("1", "true", "yes", "on"):
+        return ssl._create_unverified_context()
+    return None
 
 
 def _llm_chat_timeout_seconds() -> float:
@@ -100,7 +109,11 @@ def _request_text(
 ) -> str:
     request_headers = {"User-Agent": USER_AGENT, **(headers or {})}
     request = Request(url, headers=request_headers)
-    with urlopen(request, timeout=30) as response:
+    open_kw: dict[str, Any] = {"timeout": 30}
+    ctx = _urlopen_ssl_context()
+    if ctx is not None:
+        open_kw["context"] = ctx
+    with urlopen(request, **open_kw) as response:
         charset = response.headers.get_content_charset() or "utf-8"
         return response.read().decode(charset, errors="ignore")
 

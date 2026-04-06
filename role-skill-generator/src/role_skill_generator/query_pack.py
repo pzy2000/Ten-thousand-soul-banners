@@ -32,11 +32,55 @@ QUERY_GROUPS = [
 ]
 
 
+def _bias_query_expansions(
+    display_name: str,
+    primary_alias: str,
+) -> dict[str, dict[str, list[str]]]:
+    humor = {
+        "quote-bank-primary": [
+            f'"{display_name}" 梗图',
+            f'"{primary_alias}" meme compilation',
+        ],
+        "conversations-and-interviews": [
+            f'"{display_name}" 名场面',
+            f'"{primary_alias}" parody',
+        ],
+        "personality-and-external-views": [
+            f'"{display_name}" 二创',
+            f'"{primary_alias}" meme',
+        ],
+    }
+    serious = {
+        "first-person-writings": [
+            f'"{display_name}" 长篇 访谈',
+            f'"{primary_alias}" long-form interview',
+        ],
+        "decision-style": [
+            f'"{display_name}" 深度 复盘',
+            f'"{primary_alias}" strategic analysis',
+        ],
+        "timeline-and-evolution": [
+            f'"{display_name}" 生涯 转折 复盘',
+            f'"{primary_alias}" long-term trajectory',
+        ],
+    }
+    return {
+        "humor": humor,
+        "serious": serious,
+        "comprehensive": {
+            group_name: humor.get(group_name, []) + serious.get(group_name, [])
+            for group_name in {*(humor.keys()), *(serious.keys())}
+        },
+    }
+
+
 def build_query_pack(target: dict[str, Any]) -> list[dict[str, Any]]:
     display_name = target["display_name"]
     aliases = target["known_aliases"]
     languages = set(target["primary_languages"])
+    research_bias = target.get("research_bias", "comprehensive")
     profile_terms = aliases[:2] if aliases else [display_name]
+    primary_alias = profile_terms[0]
     quote_terms = [
         "famous quotes",
         "quote",
@@ -129,6 +173,7 @@ def build_query_pack(target: dict[str, Any]) -> list[dict[str, Any]]:
         ],
     }
 
+    bias_expansions = _bias_query_expansions(display_name, primary_alias)
     query_pack: list[dict[str, Any]] = []
     for group in QUERY_GROUPS:
         queries: list[str] = []
@@ -140,6 +185,7 @@ def build_query_pack(target: dict[str, Any]) -> list[dict[str, Any]]:
             alt_name = aliases[1]
             queries.append(f'"{alt_name}" {quote_terms[0]}')
             queries.append(f'"{alt_name}" {quote_terms[7]}')
+        queries.extend(bias_expansions.get(research_bias, {}).get(group["name"], []))
         query_pack.append(
             {
                 "name": group["name"],
