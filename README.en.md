@@ -25,6 +25,8 @@
 8 personas, 1 router skill, 6 category pages, and a template system that can keep growing through PRs.<br>
 This is not about replaying quotes or pretending at digital immortality. It turns stable style, judgment frameworks, and narrative tension from public material into callable modules.
 
+**New: [`role-skill-generator`](role-skill-generator/README.md)** Turn source trails, signature quotes, and personality evidence straight into persona skills, so research becomes summoning.
+
 [Examples](#examples) · [Install](#install) · [What Gets Distilled](#what-gets-distilled) · [Naming](#naming) · [Honest Boundaries](#honest-boundaries)
 
 </div>

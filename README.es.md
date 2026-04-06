@@ -25,6 +25,8 @@
 8 personas, 1 skill de entrada, 6 páginas de categorías y un sistema de plantillas que puede seguir creciendo vía PRs.<br>
 No se trata de repetir citas ni de fingir una inmortalidad digital. Convierte el estilo estable, los marcos de juicio y la tensión narrativa del material público en módulos invocables.
 
+**Nuevo: [`role-skill-generator`](role-skill-generator/README.md)** Convierte fuentes, citas clásicas y pruebas de personalidad en skills de personaje, para que investigar se vuelva invocar.
+
 [Ejemplos](#examples) · [Instalación](#install) · [Qué se destila](#what-gets-distilled) · [Nombre](#naming) · [Límites honestos](#honest-boundaries)
 
 </div>

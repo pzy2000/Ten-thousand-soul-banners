@@ -25,6 +25,8 @@
 8개의 페르소나, 1개의 라우터 skill, 6개의 카테고리 페이지, 그리고 PR로 계속 확장할 수 있는 템플릿 체계를 담고 있습니다.<br>
 이 프로젝트는 명언을 복창하거나 디지털 영생을 흉내 내려는 것이 아닙니다. 공개 자료 속의 안정적인 말투, 판단 프레임, 서사적 긴장을 호출 가능한 모듈로 만드는 시도입니다.
 
+**새 기능: [`role-skill-generator`](role-skill-generator/README.md)** 인물 자료, 명언, 성격 근거를 바로 캐릭터 skill로 벼려내서, 리서치를 곧바로 소환으로 바꿉니다.
+
 [예시](#examples) · [설치](#install) · [무엇을 증류하는가](#what-gets-distilled) · [이름의 의미](#naming) · [정직한 경계](#honest-boundaries)
 
 </div>
