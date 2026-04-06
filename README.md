@@ -9,6 +9,8 @@
 ![Categories](https://img.shields.io/badge/categories-5-blue)
 ![Style](https://img.shields.io/badge/style-%E4%BA%8C%E5%88%9B%20%2F%20%E6%95%B4%E6%B4%BB-orange)
 
+**语言 / Languages**：**中文** · [English](README.en.md) · [Español](README.es.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
+
 <br>
 
 <img src="Overview.png" alt="万魂幡.Skill 概览海报" width="460">
