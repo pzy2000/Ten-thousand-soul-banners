@@ -125,8 +125,8 @@ cp -R skills/all-personas ~/.openclaw/workspace/skills/all-personas
 If you want these skills available across workspaces, copy them into `~/.openclaw/skills/` instead. After copying, start a new session and verify with `openclaw skills list` or `openclaw skills check`.
 
 ```bash
-git clone https://github.com/pzy2000/Ten-thousand-soul-banners.git
-cd Ten-thousand-soul-banners
+git clone https://github.com/pzy2000/SoulBanner.git
+cd SoulBanner
 ```
 
 ### Install the router skill

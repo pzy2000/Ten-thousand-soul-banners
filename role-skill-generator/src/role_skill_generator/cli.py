@@ -15,7 +15,7 @@ from role_skill_generator.pipeline import (
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="role-skill-generator",
-        description="Research and render persona skills in the Ten thousand soul banners format.",
+        description="Research and render persona skills in the SoulBanner format.",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 

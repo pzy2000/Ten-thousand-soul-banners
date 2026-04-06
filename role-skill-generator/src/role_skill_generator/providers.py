@@ -10,7 +10,7 @@ from urllib.parse import parse_qs, quote_plus, unquote, urlparse
 from urllib.request import Request, urlopen
 
 
-USER_AGENT = "role-skill-generator/0.1 (+https://github.com/pzy2000/Ten-thousand-soul-banners)"
+USER_AGENT = "role-skill-generator/0.1 (+https://github.com/pzy2000/SoulBanner)"
 
 
 @dataclass

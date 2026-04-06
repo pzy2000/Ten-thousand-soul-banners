@@ -126,8 +126,8 @@ cp -R skills/all-personas ~/.openclaw/workspace/skills/all-personas
 これらの skill を全ワークスペースで共通利用したいなら、コピー先を `~/.openclaw/skills/` に変えてください。コピー後は新しいセッションを開き、`openclaw skills list` または `openclaw skills check` で認識を確認できます。
 
 ```bash
-git clone https://github.com/pzy2000/Ten-thousand-soul-banners.git
-cd Ten-thousand-soul-banners
+git clone https://github.com/pzy2000/SoulBanner.git
+cd SoulBanner
 ```
 
 ### ルーター skill を導入する
@@ -293,7 +293,7 @@ PR テンプレート: [.github/pull_request_template.md](.github/pull_request_t
 ## リポジトリ構造
 
 ```text
-Ten-thousand-soul-banners/
+SoulBanner/
 ├── README.md
 ├── LICENSE
 ├── CONTRIBUTING.md

@@ -113,7 +113,7 @@ def synthesize_bundle(
     client = OpenAICompatibleClient(model=model)
     system_prompt = (
         "你是一个人物蒸馏编辑器。"
-        "你的任务是把公开资料整理成 Ten thousand soul banners 仓库兼容的 persona bundle。"
+        "你的任务是把公开资料整理成 SoulBanner 仓库兼容的 persona bundle。"
         "你必须优先保守，不要编造事实，不要把出处不明的话当成稳定口头禅。"
         "输出必须是 JSON object，字段必须完整，值尽量用中文。"
     )

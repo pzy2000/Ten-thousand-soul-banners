@@ -125,8 +125,8 @@ cp -R skills/all-personas ~/.openclaw/workspace/skills/all-personas
 Si quieres que estos skills estén disponibles en todos tus workspaces, cambia el destino a `~/.openclaw/skills/`. Después de copiarlos, abre una sesión nueva y verifica con `openclaw skills list` o `openclaw skills check`.
 
 ```bash
-git clone https://github.com/pzy2000/Ten-thousand-soul-banners.git
-cd Ten-thousand-soul-banners
+git clone https://github.com/pzy2000/SoulBanner.git
+cd SoulBanner
 ```
 
 ### Instalar el skill de entrada
