@@ -122,8 +122,8 @@ cp -R skills/all-personas ~/.openclaw/workspace/skills/all-personas
 ### 安装整个仓库
 
 ```bash
-git clone https://github.com/pzy2000/Ten-thousand-soul-banners.git
-cd Ten-thousand-soul-banners
+git clone https://github.com/pzy2000/SoulBanner.git
+cd SoulBanner
 ```
 
 角色 skill 现已按两组拆分到仓库根目录：
@@ -336,7 +336,7 @@ PR 模板见 [.github/pull_request_template.md](.github/pull_request_template.md
 ## 仓库结构
 
 ```text
-Ten-thousand-soul-banners/
+SoulBanner/
 ├── README.md
 ├── LICENSE
 ├── CONTRIBUTING.md

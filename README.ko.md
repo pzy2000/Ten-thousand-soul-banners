@@ -126,8 +126,8 @@ cp -R skills/all-personas ~/.openclaw/workspace/skills/all-personas
 이 skills를 모든 워크스페이스에서 공통으로 쓰고 싶다면 대상 경로를 `~/.openclaw/skills/`로 바꾸면 됩니다. 복사 후에는 새 세션을 열고 `openclaw skills list` 또는 `openclaw skills check`로 인식 여부를 확인하세요.
 
 ```bash
-git clone https://github.com/pzy2000/Ten-thousand-soul-banners.git
-cd Ten-thousand-soul-banners
+git clone https://github.com/pzy2000/SoulBanner.git
+cd SoulBanner
 ```
 
 ### 라우터 skill 설치
@@ -293,7 +293,7 @@ PR 템플릿: [.github/pull_request_template.md](.github/pull_request_template.m
 ## 저장소 구조
 
 ```text
-Ten-thousand-soul-banners/
+SoulBanner/
 ├── README.md
 ├── LICENSE
 ├── CONTRIBUTING.md

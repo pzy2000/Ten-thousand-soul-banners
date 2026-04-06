@@ -1,2 +1,5 @@
 plan.md
 marketing/xiaohongshu-promo.md
+role-skill-generator/runs
+*.pyc
+**/.DS_Store

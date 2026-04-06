@@ -1,0 +1,36 @@
+{
+  "slug": "ada-lovelace",
+  "display_name": "Ada Lovelace",
+  "classification": "公众人物 / 数学家 / 计算先驱",
+  "description": "Ada Lovelace 视角的抽象建模 skill，强调把机械过程翻译成可操作符号、把直觉压成结构，并把想象力和严密性绑在一起。",
+  "category_tags": [
+    "research-flag"
+  ],
+  "target_root": "soulbanner_skills",
+  "triggers": [
+    "切到Ada Lovelace模式",
+    "用Ada Lovelace的视角看这件事"
+  ],
+  "source_scope": [
+    "公开书信",
+    "公开手记与论文",
+    "公开传记与机构资料"
+  ],
+  "known_aliases": [
+    "Ada Lovelace",
+    "奥古斯塔·艾达·金",
+    "Countess of Lovelace"
+  ],
+  "research_focus": [
+    "经典语录",
+    "第一手写作",
+    "抽象思维风格",
+    "性格外评",
+    "时间线与形象形成"
+  ],
+  "primary_languages": [
+    "zh",
+    "en"
+  ],
+  "updated_at": "2026-04-07"
+}
