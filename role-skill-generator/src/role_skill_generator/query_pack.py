@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from typing import Any
 
 
@@ -30,6 +31,97 @@ QUERY_GROUPS = [
         "purpose": "找人设形成、转折、出圈和风格固化的时间线证据。",
     },
 ]
+
+
+_ZH_CONTEXT_SUFFIXES = {
+    "quote-bank-primary": "名言",
+    "first-person-writings": "采访",
+    "conversations-and-interviews": "对话",
+    "personality-and-external-views": "评价",
+    "decision-style": "决策",
+    "timeline-and-evolution": "时间线",
+}
+_EN_CONTEXT_SUFFIXES = {
+    "quote-bank-primary": "quotes",
+    "first-person-writings": "interview",
+    "conversations-and-interviews": "conversation",
+    "personality-and-external-views": "profile",
+    "decision-style": "decision making",
+    "timeline-and-evolution": "timeline",
+}
+_GENERIC_CONTEXT_TERMS = {
+    "公众人物",
+    "人物",
+    "角色",
+    "角色类型",
+    "网络人物",
+}
+
+
+def _contains_cjk(text: str) -> bool:
+    return bool(re.search(r"[\u3400-\u9fff]", text))
+
+
+def _dedupe_keep_order(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    result: list[str] = []
+    for item in values:
+        if item not in seen:
+            seen.add(item)
+            result.append(item)
+    return result
+
+
+def _looks_like_search_phrase(text: str) -> bool:
+    stripped = " ".join(text.split()).strip(" -")
+    if len(stripped) < 2:
+        return False
+    if stripped in _GENERIC_CONTEXT_TERMS:
+        return False
+    if _contains_cjk(stripped):
+        if len(stripped) > 24:
+            return False
+    elif len(stripped) > 64:
+        return False
+    return True
+
+
+def _extract_context_terms(target: dict[str, Any]) -> list[str]:
+    description = " ".join(str(target.get("description", "")).split())
+    classification = " ".join(str(target.get("classification", "")).split())
+    candidates: list[str] = []
+
+    if description and _looks_like_search_phrase(description) and not re.search(r"[，。,；;、/|]", description):
+        candidates.append(description)
+
+    split_pattern = r"[，。,；;、/|]+"
+    for source in (description, classification):
+        for chunk in re.split(split_pattern, source):
+            normalized = " ".join(chunk.split()).strip(" -")
+            if _looks_like_search_phrase(normalized):
+                candidates.append(normalized)
+
+    aliases = {alias.strip() for alias in target.get("known_aliases", []) if isinstance(alias, str)}
+    aliases.add(str(target.get("display_name", "")).strip())
+    return [term for term in _dedupe_keep_order(candidates) if term and term not in aliases][:3]
+
+
+def _context_query_expansions(
+    target: dict[str, Any],
+    display_name: str,
+) -> dict[str, list[str]]:
+    context_terms = _extract_context_terms(target)
+    expansions = {group["name"]: [] for group in QUERY_GROUPS}
+    for group in QUERY_GROUPS:
+        group_name = group["name"]
+        zh_suffix = _ZH_CONTEXT_SUFFIXES[group_name]
+        en_suffix = _EN_CONTEXT_SUFFIXES[group_name]
+        for term in context_terms:
+            if _contains_cjk(term):
+                expansions[group_name].append(f'"{display_name}" "{term}" {zh_suffix}')
+            else:
+                expansions[group_name].append(f'"{display_name}" "{term}" {en_suffix}')
+    return expansions
 
 
 def _bias_query_expansions(
@@ -76,24 +168,8 @@ def _bias_query_expansions(
 
 def build_query_pack(target: dict[str, Any]) -> list[dict[str, Any]]:
     display_name = target["display_name"]
-    aliases = target["known_aliases"]
     languages = set(target["primary_languages"])
     research_bias = target.get("research_bias", "comprehensive")
-    profile_terms = aliases[:2] if aliases else [display_name]
-    primary_alias = profile_terms[0]
-    quote_terms = [
-        "famous quotes",
-        "quote",
-        "interview transcript",
-        "speech transcript",
-        "writing",
-        "letter",
-        "biography",
-        "personality",
-        "leadership style",
-        "decision making",
-        "timeline",
-    ]
 
     zh_queries = {
         "quote-bank-primary": [
@@ -136,44 +212,45 @@ def build_query_pack(target: dict[str, Any]) -> list[dict[str, Any]]:
 
     en_queries = {
         "quote-bank-primary": [
-            f'"{profile_terms[0]}" famous quotes',
-            f'"{profile_terms[0]}" quote source',
-            f'site:wikiquote.org "{profile_terms[0]}"',
-            f'"{profile_terms[0]}" speech transcript',
+            f'"{display_name}" famous quotes',
+            f'"{display_name}" quote source',
+            f'site:wikiquote.org "{display_name}"',
+            f'"{display_name}" speech transcript',
         ],
         "first-person-writings": [
-            f'"{profile_terms[0]}" interview transcript',
-            f'"{profile_terms[0]}" writings',
-            f'"{profile_terms[0]}" letters',
-            f'"{profile_terms[0]}" essay OR article',
+            f'"{display_name}" interview transcript',
+            f'"{display_name}" writings',
+            f'"{display_name}" letters',
+            f'"{display_name}" essay OR article',
         ],
         "conversations-and-interviews": [
-            f'site:youtube.com "{profile_terms[0]}" interview',
-            f'"{profile_terms[0]}" podcast interview',
-            f'"{profile_terms[0]}" Q&A transcript',
-            f'"{profile_terms[0]}" responds to criticism',
+            f'site:youtube.com "{display_name}" interview',
+            f'"{display_name}" podcast interview',
+            f'"{display_name}" Q&A transcript',
+            f'"{display_name}" responds to criticism',
         ],
         "personality-and-external-views": [
-            f'"{profile_terms[0]}" personality profile',
-            f'"{profile_terms[0]}" leadership style',
-            f'"{profile_terms[0]}" critics describe',
-            f'"{profile_terms[0]}" supporters describe',
+            f'"{display_name}" personality profile',
+            f'"{display_name}" leadership style',
+            f'"{display_name}" critics describe',
+            f'"{display_name}" supporters describe',
         ],
         "decision-style": [
-            f'"{profile_terms[0]}" decision making style',
-            f'"{profile_terms[0]}" major decisions',
-            f'"{profile_terms[0]}" risk appetite',
-            f'"{profile_terms[0]}" management style',
+            f'"{display_name}" decision making style',
+            f'"{display_name}" major decisions',
+            f'"{display_name}" risk appetite',
+            f'"{display_name}" management style',
         ],
         "timeline-and-evolution": [
-            f'"{profile_terms[0]}" timeline',
-            f'"{profile_terms[0]}" biography milestones',
-            f'"{profile_terms[0]}" turning points',
-            f'"{profile_terms[0]}" public image evolution',
+            f'"{display_name}" timeline',
+            f'"{display_name}" biography milestones',
+            f'"{display_name}" turning points',
+            f'"{display_name}" public image evolution',
         ],
     }
 
-    bias_expansions = _bias_query_expansions(display_name, primary_alias)
+    bias_expansions = _bias_query_expansions(display_name, display_name)
+    context_expansions = _context_query_expansions(target, display_name)
     query_pack: list[dict[str, Any]] = []
     for group in QUERY_GROUPS:
         queries: list[str] = []
@@ -181,11 +258,9 @@ def build_query_pack(target: dict[str, Any]) -> list[dict[str, Any]]:
             queries.extend(zh_queries[group["name"]])
         if "en" in languages:
             queries.extend(en_queries[group["name"]])
-        if len(aliases) > 1:
-            alt_name = aliases[1]
-            queries.append(f'"{alt_name}" {quote_terms[0]}')
-            queries.append(f'"{alt_name}" {quote_terms[7]}')
+        queries.extend(context_expansions.get(group["name"], []))
         queries.extend(bias_expansions.get(research_bias, {}).get(group["name"], []))
+        queries = _dedupe_keep_order(queries)
         query_pack.append(
             {
                 "name": group["name"],

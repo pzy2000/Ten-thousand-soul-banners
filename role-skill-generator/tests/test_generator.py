@@ -106,6 +106,35 @@ class GeneratorTests(unittest.TestCase):
         self.assertTrue(any("长篇 访谈" in query or "long-form interview" in query for query in serious_queries))
         self.assertFalse(any("梗图" in query or "meme compilation" in query for query in serious_queries))
 
+    def test_query_pack_includes_user_description_context(self) -> None:
+        target = normalize_target_profile(
+            {
+                "display_name": "骆源",
+                "classification": "学者 / 教授",
+                "description": "上海交通大学长聘教授",
+                "category_tags": ["research-flag"],
+                "primary_languages": ["zh"],
+            }
+        )
+        queries = [query for group in build_query_pack(target) for query in group["queries"]]
+        self.assertTrue(
+            any('"骆源"' in query and '"上海交通大学长聘教授"' in query for query in queries)
+        )
+
+    def test_query_pack_does_not_expand_aliases_into_search_queries(self) -> None:
+        target = normalize_target_profile(
+            {
+                "display_name": "Yann LeCun",
+                "classification": "研究者 / AI scientist",
+                "category_tags": ["research-flag"],
+                "known_aliases": ["Y. LeCun", "Yann LeCun", "LeCun"],
+                "primary_languages": ["en"],
+            }
+        )
+        queries = [query for group in build_query_pack(target) for query in group["queries"]]
+        self.assertFalse(any('"Y. LeCun"' in query for query in queries))
+        self.assertFalse(any('"LeCun"' in query and '"Yann LeCun"' not in query for query in queries))
+
     def test_render_outputs_repo_shape(self) -> None:
         bundle = normalize_persona_bundle(load_json(ROOT / "examples" / "ada-lovelace.bundle.json"))
         with tempfile.TemporaryDirectory() as tmp_dir:
