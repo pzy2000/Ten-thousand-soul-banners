@@ -9,7 +9,7 @@ import threading
 import time
 from dataclasses import dataclass
 from typing import Any
-from urllib.error import HTTPError as UrllibHTTPError
+from urllib.error import HTTPError as UrllibHTTPError, URLError
 from urllib.parse import parse_qs, quote_plus, unquote, urlparse
 from urllib.request import Request, urlopen
 
@@ -33,19 +33,47 @@ class HTTPError(RuntimeError):
 _DEFAULT_HTTP_TIMEOUT = 30.0
 _LLM_CHAT_TIMEOUT_DEFAULT = 600.0
 _RESEARCH_WAIT_HEARTBEAT_SEC = 5.0
+_JSON_HTTP_RETRIES = 3
+_JSON_HTTP_RETRY_BASE_SEC = 0.6
 
 
-def _urlopen_ssl_context() -> ssl.SSLContext | None:
-    """TLS context for document fetches only.
+def _insecure_tls_context() -> ssl.SSLContext:
+    """No cert verification, but keep `create_default_context` baseline (TLS versions, ciphers)."""
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+    return ctx
 
-    By default verification is **off** (many sources use legacy / non-compliant chains).
-    Set ``ROLE_SKILL_FETCH_INSECURE_SSL=0`` (or ``false`` / ``no`` / ``off``) to use the
-    platform default verified context.
+
+def _fetch_tls_context() -> ssl.SSLContext | None:
+    """TLS for `_request_text` (HTML search + document bodies).
+
+    Set ``ROLE_SKILL_FETCH_INSECURE_SSL=0`` for full verification.
     """
     raw = os.getenv("ROLE_SKILL_FETCH_INSECURE_SSL", "1").strip().lower()
     if raw in ("0", "false", "no", "off"):
         return None
-    return ssl._create_unverified_context()
+    return _insecure_tls_context()
+
+
+def _api_tls_context() -> ssl.SSLContext | None:
+    """TLS for `_request_json` (Tavily, Serper, OpenAI-compatible chat).
+
+    Defaults to **same policy as fetch** (insecure) so corporate/MITM/proxy setups that break
+    verified handshakes still work. Override only for APIs: ``ROLE_SKILL_API_INSECURE_SSL=0``.
+    """
+    api_raw = os.getenv("ROLE_SKILL_API_INSECURE_SSL")
+    if api_raw is not None and str(api_raw).strip() != "":
+        raw = str(api_raw).strip().lower()
+    else:
+        raw = os.getenv("ROLE_SKILL_FETCH_INSECURE_SSL", "1").strip().lower()
+    if raw in ("0", "false", "no", "off"):
+        return None
+    return _insecure_tls_context()
+
+
+def _is_retryable_url_error(exc: URLError) -> bool:
+    return isinstance(exc.reason, ssl.SSLError)
 
 
 def _llm_chat_timeout_seconds() -> float:
@@ -89,8 +117,26 @@ def _request_json(
         thread.start()
     try:
         try:
-            with urlopen(request, timeout=timeout) as response:
-                body = response.read().decode("utf-8")
+            open_kw: dict[str, Any] = {"timeout": timeout}
+            ctx = _api_tls_context()
+            if ctx is not None:
+                open_kw["context"] = ctx
+            body = ""
+            for attempt in range(_JSON_HTTP_RETRIES):
+                try:
+                    with urlopen(request, **open_kw) as response:
+                        body = response.read().decode("utf-8")
+                    break
+                except URLError as exc:
+                    last_url_err = exc
+                    if attempt + 1 < _JSON_HTTP_RETRIES and _is_retryable_url_error(exc):
+                        time.sleep(_JSON_HTTP_RETRY_BASE_SEC * (attempt + 1))
+                        continue
+                    raise HTTPError(
+                        f"请求 {url} 失败: {exc}。"
+                        " 若疑似代理/SSL 问题：检查 HTTPS_PROXY/ALL_PROXY 与 NO_PROXY；"
+                        "或保持 ROLE_SKILL_API_INSECURE_SSL=1（默认与抓取一致）。"
+                    ) from exc
         except TimeoutError as exc:
             raise HTTPError(f"请求在 {timeout:g} 秒内未完成: {url}") from exc
         except UrllibHTTPError as exc:
@@ -115,7 +161,7 @@ def _request_text(
     request_headers = {"User-Agent": USER_AGENT, **(headers or {})}
     request = Request(url, headers=request_headers)
     open_kw: dict[str, Any] = {"timeout": 30}
-    ctx = _urlopen_ssl_context()
+    ctx = _fetch_tls_context()
     if ctx is not None:
         open_kw["context"] = ctx
     with urlopen(request, **open_kw) as response:

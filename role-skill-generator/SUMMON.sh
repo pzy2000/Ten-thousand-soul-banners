@@ -33,15 +33,20 @@ case "$RESEARCH_BIAS" in
     ;;
 esac
 
-# Document fetches default to skipping TLS cert verification (see providers.py).
-# To enforce verification: ROLE_SKILL_FETCH_INSECURE_SSL=0 or SUMMON_FETCH_VERIFY_SSL=1
+# TLS: fetch + API (Tavily/Serper/OpenAI) default to no cert verify unless you set
+# ROLE_SKILL_FETCH_INSECURE_SSL=0 or ROLE_SKILL_API_INSECURE_SSL=0. SUMMON_FETCH_VERIFY_SSL=1 forces fetch=verify (API inherits).
 if [[ "${SUMMON_FETCH_VERIFY_SSL:-}" == "1" ]]; then
   export ROLE_SKILL_FETCH_INSECURE_SSL=0
 fi
 
-PROVIDER="${ROLE_SKILL_PROVIDER:-duckduckgo-html}"
-if [[ -n "${TAVILY_API_KEY:-}" && "$PROVIDER" == "duckduckgo-html" ]]; then
+# Prefer Tavily when TAVILY_API_KEY is set and provider not explicitly chosen.
+if [[ -z "${ROLE_SKILL_PROVIDER:-}" && -n "${TAVILY_API_KEY:-}" ]]; then
   PROVIDER="tavily"
+else
+  PROVIDER="${ROLE_SKILL_PROVIDER:-duckduckgo-html}"
+  if [[ -n "${TAVILY_API_KEY:-}" && "$PROVIDER" == "duckduckgo-html" ]]; then
+    PROVIDER="tavily"
+  fi
 fi
 
 cd "$SCRIPT_DIR"
