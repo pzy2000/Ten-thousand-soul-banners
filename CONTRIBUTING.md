@@ -49,7 +49,7 @@
 * 物理目录只保留一份
 * `renhuang-flag` 角色的物理目录放在 `sovereign_skills/`
 * 其他当前分类角色的物理目录放在 `soulbanner_skills/`
-* `人皇旗（Power Figures）` 目前只允许收录特朗普与马斯克
+* `人皇旗（Power Figures）` 角色统一收录在 `sovereign_skills/`
 
 ## 如何写“诚实边界”
 

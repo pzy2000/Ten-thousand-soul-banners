@@ -51,6 +51,7 @@
 * `tong-jincheng`
 * `trump`
 * `musk`
+* `zhang-xuefeng`
 * `yu-dazui`
 * `hanli`
 * `yann-lecun`
