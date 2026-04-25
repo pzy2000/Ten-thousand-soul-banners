@@ -148,6 +148,7 @@ cp -R skills/all-personas ~/.codex/skills/all-personas
 - 童錦程
 - トランプ
 - マスク
+- 張雪峰
 - 余大嘴
 - 韓立
 - Yann LeCun
@@ -163,6 +164,7 @@ cp -R skills/all-personas ~/.codex/skills/all-personas
 | **Tong Jincheng** | 恋愛軍師系、関係判断、反・定番説教 | `jianghu-flag` |
 | **Trump** | 強い物語化、強い対立性、断定口調 | `renhuang-flag` |
 | **Musk** | 第一原理、工学への執着、ビジョン駆動の推進 | `renhuang-flag` |
+| **Zhang Xuefeng** | 就職志向、資源制約、現実的な進路判断 | `renhuang-flag` |
 | **Yu Dazui** | 発表会の圧、商戦の気配、技術営業的な語り | `business-flag` |
 | **Hanli** | 架空キャラクター、慎重な生存志向、謀ってから動く | `fiction-flag` |
 | **Yann LeCun** | 研究路線、世界モデル、自己教師あり学習、反 hype | `research-flag` |
@@ -201,10 +203,11 @@ cp -R skills/all-personas ~/.codex/skills/all-personas
 * 現実の価値判断を与えません
 * 政治的立場への支持を意味しません
 
-現在 `Power Figures` に入るのは次の 2 名のみです:
+現在 `Power Figures` に入るのは次のペルソナです:
 
 * `trump`
 * `musk`
+* `zhang-xuefeng`
 
 ---
 
@@ -308,12 +311,15 @@ SoulBanner/
 │   ├── fiction-flag.md
 │   └── research-flag.md
 ├── skills/
-│   ├── all-personas/
+│   └── all-personas/
+├── sovereign_skills/
+│   ├── trump/
+│   ├── musk/
+│   └── zhang-xuefeng/
+├── soulbanner_skills/
 │   ├── changshu-arno/
 │   ├── liangzi/
 │   ├── tong-jincheng/
-│   ├── trump/
-│   ├── musk/
 │   ├── yu-dazui/
 │   ├── hanli/
 │   └── yann-lecun/

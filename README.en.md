@@ -147,6 +147,7 @@ Role skills are now split into two root-level folders: `sovereign_skills/` for P
 - Tong Jincheng
 - Trump
 - Musk
+- Zhang Xuefeng
 - Yu Dazui
 - Hanli
 - Yann LeCun

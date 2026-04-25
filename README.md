@@ -130,7 +130,7 @@ cd SoulBanner
 
 角色 skill 现已按两组拆分到仓库根目录：
 
-* `sovereign_skills/`：人皇旗角色（`trump`、`musk`）
+* `sovereign_skills/`：人皇旗角色（`trump`、`musk`、`zhang-xuefeng`）
 * `soulbanner_skills/`：万魂幡其余角色
 * `skills/all-personas`：总入口 skill
 
@@ -180,7 +180,7 @@ cp -R sovereign_skills/musk ~/.codex/skills/musk
 | 模块 | 内容 |
 |------|------|
 | **总入口** | `all-personas`，负责列人、分类浏览、角色推荐、切换与多角色对照 |
-| **当前角色** | 常熟阿诺、良子、童锦程、特朗普、马斯克、余大嘴、韩立、Yann LeCun |
+| **当前角色** | 常熟阿诺、良子、童锦程、特朗普、马斯克、张雪峰、余大嘴、韩立、Yann LeCun |
 | **角色目录** | 根目录拆分为 `sovereign_skills/`（人皇旗）与 `soulbanner_skills/`（万魂幡角色），`skills/all-personas` 保留总入口 |
 | **分类体系** | `人皇旗（Power Figures）`、`abstract-flag`、`jianghu-flag`、`business-flag`、`fiction-flag`、`research-flag` |
 | **研究结构** | 每个角色都有 `SKILL.md`、`README.md` 和 `references/research/` 六件套 |
@@ -208,6 +208,7 @@ cp -R sovereign_skills/musk ~/.codex/skills/musk
 | **童锦程** | 深情祖师爷、关系判断、反鸡汤 | `jianghu-flag` | `soulbanner_skills/tong-jincheng` |
 | **特朗普** | 强叙事、强对抗、绝对化表达 | `renhuang-flag` | `sovereign_skills/trump` |
 | **马斯克** | 第一性原理、工程执念、愿景推进 | `renhuang-flag` | `sovereign_skills/musk` |
+| **张雪峰** | 就业导向、资源约束、现实决策 | `renhuang-flag` | `sovereign_skills/zhang-xuefeng` |
 | **余大嘴** | 发布会压强、商战感、技术话术 | `business-flag` | `soulbanner_skills/yu-dazui` |
 | **韩立** | 虚构角色，谨慎求生、谋定后动 | `fiction-flag` | `soulbanner_skills/hanli` |
 | **Yann LeCun** | 研究路线、世界模型、自监督学习、反 hype | `research-flag` | `soulbanner_skills/yann-lecun` |
@@ -245,10 +246,11 @@ cp -R sovereign_skills/musk ~/.codex/skills/musk
 * 不代表现实价值判断
 * 不代表政治立场背书
 
-当前 `人皇旗` 固定只收：
+当前 `人皇旗` 收录：
 
 * `trump`
 * `musk`
+* `zhang-xuefeng`
 
 ---
 
@@ -354,7 +356,8 @@ SoulBanner/
 │   └── all-personas/
 ├── sovereign_skills/
 │   ├── trump/
-│   └── musk/
+│   ├── musk/
+│   └── zhang-xuefeng/
 ├── soulbanner_skills/
 │   ├── changshu-arno/
 │   ├── liangzi/
