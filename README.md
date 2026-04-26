@@ -13,11 +13,6 @@
 
 <br>
 
-<img src="Overview.png" alt="万魂幡.Skill 概览海报" width="460">
-
-<br>
-<br>
-
 **一个把公众人物、网络人物、虚构角色蒸馏成 `.skill` 的多人仓库。**
 
 <br>
@@ -28,6 +23,12 @@
 **新：[`role-skill-generator`](role-skill-generator/README.md)** 把人物资料、经典语录和性格证据直接炼成角色 skill，让“查资料”一步变成“起角色”。
 
 [看效果](#效果示例) · [安装](#安装) · [蒸馏了什么](#万魂幡蒸馏了什么) · [命名解释](#命名解释) · [诚实边界](#诚实边界)
+
+<br>
+
+<img src="Overview.png" alt="万魂幡.Skill 概览海报" width="460">
+
+<br>
 
 </div>
 
